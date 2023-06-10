@@ -1,8 +1,12 @@
 from flask import Flask
 from config import Config
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
-from book_library_app import authors
+db = SQLAlchemy(app)
 
+
+from book_library_app import authors
