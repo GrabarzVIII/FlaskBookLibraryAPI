@@ -1,7 +1,7 @@
 from book_library_app import db
 
 class Author(db.Model):
-    __tablename__ == 'authors'
+    __tablename__ = 'authors'
     id = db.Column(db.Integer, primary_key = True)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
