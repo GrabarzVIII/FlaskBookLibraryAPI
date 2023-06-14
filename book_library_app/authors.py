@@ -1,27 +1,44 @@
-from flask import jsonify
-from book_library_app import app
-
+from flask import jsonify, request
+from book_library_app import app, db
+from book_library_app.models import Author, AuthorSchema, author_schema
+from webargs.flaskparser import use_args
 
 
 @app.route('/api/v1/authors', methods=['GET'])
 def get_authors():
+    authors = Author.query.all()
+    author_schema = AuthorSchema(many=True)
+
     return jsonify({
         'success': True,
-        'data': 'Get all authors'
+        'data': author_schema.dump(authors),
+        'number_of_records': len(authors)
     })
 
 @app.route('/api/v1/authors/<int:author_id>', methods=['GET'])
 def get_author(author_id: int):
+    author = Author.query.get_or_404(author_id, description=f"Author with id {author_id} not found")
     return jsonify({
         'success': True,
-        'data': f'Get singel author with id {author_id}'
+        'data': author_schema.dump(author)
     })
 
 @app.route('/api/v1/authors', methods=['POST'])
-def creat_author():
+@use_args(author_schema)
+def creat_author(args: dict):
+    print(args)
+    # data = request.get_json()
+    # first_name = data.get('first_name')
+    # last_name = data.get('last_name')
+    # birth_date = data.get('birth_date')
+    # author = Author(first_name=first_name, last_name=last_name, birth_date=birth_date)
+    author = Author(**args)
+    db.session.add(author)
+    db.session.commit()
+    # print(author)
     return jsonify({
         'success': True,
-        'data': 'New author has been created'
+        'data': author_schema.dump(author)
     }), 201
 
 @app.route('/api/v1/authors/<int:author_id>', methods=['PUT'])
