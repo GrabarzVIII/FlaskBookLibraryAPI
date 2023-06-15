@@ -11,4 +11,4 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 
-from book_library_app import authors, models, db_manage_commands
+from book_library_app import authors, models, db_manage_commands, errors

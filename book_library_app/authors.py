@@ -2,6 +2,7 @@ from flask import jsonify, request
 from book_library_app import app, db
 from book_library_app.models import Author, AuthorSchema, author_schema
 from webargs.flaskparser import use_args
+from book_library_app.utils import validate_json_content_type
 
 
 @app.route('/api/v1/authors', methods=['GET'])
@@ -24,7 +25,8 @@ def get_author(author_id: int):
     })
 
 @app.route('/api/v1/authors', methods=['POST'])
-@use_args(author_schema)
+@validate_json_content_type
+@use_args(author_schema, error_status_code=400)
 def creat_author(args: dict):
     print(args)
     # data = request.get_json()
